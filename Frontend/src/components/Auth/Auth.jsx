@@ -160,7 +160,8 @@ const Auth = () => {
                 name="confirmPassword"
                 label="Repeat Password"
                 handleChange={handleChange}
-                type="password"
+                //type="password"
+                type={showPassword ? "text" : "password"}
                 error={!!errors.confirmPassword}
                 helperText={errors.confirmPassword}
               />
