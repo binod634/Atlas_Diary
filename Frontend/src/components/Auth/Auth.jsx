@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 import {
@@ -16,15 +16,15 @@ import useStyles from "./styles";
 import Input from "./Input/Input";
 import { signUp, signIn } from "../../actions/auth";
 
-const Auth = () => {
-  const initialFormData = {
-    firstName: "",
-    lastName: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-  };
+const initialFormData = {
+  firstName: "",
+  lastName: "",
+  email: "",
+  password: "",
+  confirmPassword: "",
+};
 
+const Auth = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const history = useHistory();
@@ -38,9 +38,6 @@ const Auth = () => {
     const newErrors = {};
     const namePattern = /^[a-zA-Z]+$/;
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-    // Strong password:
-    // Minimum 8 chars, 1 uppercase, 1 lowercase, 1 number, 1 special char
     const passwordPattern =
       /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/;
 
@@ -99,6 +96,7 @@ const Auth = () => {
     setIsSignUp((prevState) => !prevState);
     setErrors({});
     setFormData(initialFormData);
+    setShowPassword(false);
   };
 
   return (
@@ -107,33 +105,31 @@ const Auth = () => {
         <Avatar className={classes.avatar}>
           <LockOutlinedIcon />
         </Avatar>
-        <Typography variant="h5">
-          {isSignup ? "Sign Up" : "Sign In"}
-        </Typography>
+        <Typography variant="h5">{isSignup ? "Sign Up" : "Sign In"}</Typography>
 
-        <form className={classes.form} onSubmit={handleSubmit}>
+        <form className={classes.form} onSubmit={handleSubmit} noValidate>
           <Grid container spacing={2}>
             {isSignup && (
               <>
                 <Input
+                  half
                   name="firstName"
                   label="First Name"
                   handleChange={handleChange}
-                  half
                   error={!!errors.firstName}
                   helperText={errors.firstName}
+                  autoFocus
                 />
                 <Input
+                  half
                   name="lastName"
                   label="Last Name"
                   handleChange={handleChange}
-                  half
                   error={!!errors.lastName}
                   helperText={errors.lastName}
                 />
               </>
             )}
-
             <Input
               name="email"
               label="Email Address"
@@ -141,6 +137,7 @@ const Auth = () => {
               type="email"
               error={!!errors.email}
               helperText={errors.email}
+              autoFocus={!isSignup}
             />
 
             <Input
@@ -158,31 +155,36 @@ const Auth = () => {
                 name="confirmPassword"
                 label="Repeat Password"
                 handleChange={handleChange}
-                type="password"
+                //type="password"
+                type={showPassword ? "text" : "password"}
                 error={!!errors.confirmPassword}
                 helperText={errors.confirmPassword}
               />
             )}
 
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              color="primary"
-              className={classes.submit}
-            >
-              {isSignup ? "Sign Up" : "Sign In"}
-            </Button>
+            <Grid item xs={12}>
+              <Button
+                type="submit"
+                fullWidth
+                variant="contained"
+                color="primary"
+                className={classes.submit}
+              >
+                {isSignup ? "Sign Up" : "Sign In"}
+              </Button>
+            </Grid>
 
-            {/* FIXED deprecated prop */}
-            <Grid container justifyContent="center">
-              <Grid item>
-                <Button onClick={switchMode}>
-                  {isSignup
-                    ? "Already have an account? Sign In"
-                    : "Don't have an account? Sign Up"}
-                </Button>
-              </Grid>
+            <Grid item xs={12}>
+              <Button
+                onClick={switchMode}
+                fullWidth
+                color="secondary"
+                style={{ marginTop: 8 }}
+              >
+                {isSignup
+                  ? "Already have an account? Sign In"
+                  : "Don't have an account? Sign Up"}
+              </Button>
             </Grid>
           </Grid>
         </form>
