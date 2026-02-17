@@ -34,11 +34,6 @@ const Auth = () => {
   const [formData, setFormData] = useState(initialFormData);
   const [errors, setErrors] = useState({});
 
-  useEffect(() => {
-    console.log("Auth component mounted");
-    console.log("Initial form data:", formData);
-    console.log("Initial errors:", errors);
-  }, [errors, formData]);
   const validate = () => {
     const newErrors = {};
     const namePattern = /^[a-zA-Z]+$/;
